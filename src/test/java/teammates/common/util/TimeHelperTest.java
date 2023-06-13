@@ -41,6 +41,66 @@ public class TimeHelperTest extends BaseTestCase {
     }
 
     @Test
+    public void testFormatInstant_instantNull() {
+        Instant instant = null;
+        String timeZone = "Europe/London";
+        String pattern = "dd/MM/yyyy HH:mm:ss";
+        
+        String expected = "";
+        String result = TimeHelper.formatInstant(instant, timeZone, pattern);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testFormatInstant_timeZoneNull() {
+        Instant instant = Instant.parse("2023-06-12T08:45:00Z");
+        String timeZone = null;
+        String pattern = "dd/MM/yyyy HH:mm";
+        
+        String expected = "";
+        String result = TimeHelper.formatInstant(instant, timeZone, pattern);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testFormatInstant_patternNull() {
+        Instant instant = Instant.parse("2023-06-12T10:00:00Z");
+        String timeZone = "Asia/Tokyo";
+        String pattern = null;
+        
+        String expected = "";
+        String result = TimeHelper.formatInstant(instant, timeZone, pattern);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testFormatInstant_exactNoon() {
+        Instant instant = Instant.parse("2023-06-12T12:00:00Z");
+        String timeZone = "America/Los_Angeles";
+        String pattern = "yyyy-MM-dd hh:mm a";
+
+        String expected = "2023-06-12 12:00 'NOON'";
+        String result = TimeHelper.formatInstant(instant, timeZone, pattern);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testFormatInstant_nonNoon() {
+        Instant instant = Instant.parse("2023-06-12T19:15:00Z");
+        String timeZone = "Europe/Paris";
+        String pattern = "yyyy-MM-dd hh:mm a";
+        
+        String expected = "2023-06-12 09:15 PM";
+        String result = TimeHelper.formatInstant(instant, timeZone, pattern);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
     public void testGetMidnightAdjustedInstantBasedOnZone() {
         String zoneId = "UTC";
         Instant instantAt0000 = LocalDateTime.of(2015, Month.NOVEMBER, 30, 0, 0).atZone(ZoneId.of(zoneId)).toInstant();
